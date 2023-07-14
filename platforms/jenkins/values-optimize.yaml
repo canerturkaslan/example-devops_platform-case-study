@@ -1,0 +1,27 @@
+controller:
+  imagePullPolicy: IfNotPresent
+  resources:
+    requests:
+      cpu: 50m
+      memory: 512Mi
+    limits:
+      cpu: 500m
+      memory: 1Gi
+  javaOpts: "-Xmx1g"
+
+persistence:
+  existingClaim: jenkins-local-pv
+  size: "1Gi"
+
+agent:
+  resources:
+    requests:
+      cpu: 50m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+nodeSelector:
+  app: jenkins
+
