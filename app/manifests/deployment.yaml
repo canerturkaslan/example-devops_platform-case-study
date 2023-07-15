@@ -28,7 +28,7 @@ spec:
       - name: regcred                
       containers:
         - name: flask-app
-          image: canerturkaslan/flask-app:0<IMAGE_TAG>
+          image: canerturkaslan/flask-app:0.<IMAGE_TAG>
           imagePullPolicy: IfNotPresent       
           ports:
             - containerPort: 5000
