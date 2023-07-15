@@ -23,20 +23,20 @@ pipeline {
           def dockerImage = 'canerturkaslan/flask-app'
           def dockerfile = './app/Dockerfile'
           def buildNumber = env.BUILD_NUMBER ?: '1' 
-          def dockerTag = "${imageName}:0.${buildNumber}"           
+          def dockerTag = "${dockerImage}:0.${buildNumber}"           
 
           // Dockerfile'ı Kaniko'nun çalışma dizinine kopyala
           sh "cp ${dockerfile} /kaniko/${dockerfile}"
 
           // Docker imajını Kaniko ile build e
-          sh "kaniko --context=/kaniko --dockerfile=${dockerfile} --destination=${imageName}:0.${buildNumber} --insecure --single-snapshot"
+          sh "kaniko --context=/kaniko --dockerfile=${dockerfile} --destination=${dockerImage}:0.${buildNumber} --insecure --single-snapshot"
 
           // Docker imajını hedef registriye push et
-          sh "kaniko --context=/kaniko --dockerfile=${dockerfile} --destination=${imageName}:0.${buildNumber} --insecure --push"
+          sh "kaniko --context=/kaniko --dockerfile=${dockerfile} --destination=${dockerImage}:0.${buildNumber} --insecure --push"
           sh '''
           /kaniko/executor --dockerfile `pwd`./app/Dockerfile \
                            --context `pwd` \
-                           --destination==${imageName}:0.${buildNumber}
+                           --destination==${dockerImage}:0.${buildNumber}
           '''
         }
       }
