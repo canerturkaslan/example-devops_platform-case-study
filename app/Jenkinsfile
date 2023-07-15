@@ -40,11 +40,12 @@ pipeline {
         container('kubectl') {
           withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) {
             sh 'ls -ltrah && pwd'
-            sh 'sed -i "s/<IMAGE_TAG>/${BUILD_NUMBER}/" ./manifests/deployment.yaml'
-            sh 'kubectl apply -f ./manifests/deployment.yaml'
-            sh 'kubectl apply -f ./manifests/service.yaml'
-            sh 'kubectl apply -f ./manifests/hpa.yaml'
-            sh 'kubectl apply -f ./manifests/ingress.yaml'
+            sh 'sed -i "s/<IMAGE_TAG>/${BUILD_NUMBER}/" ./app/manifests/deployment.yaml'
+            sh 'kubectl apply -f ./app/manifests/deployment.yaml'
+            sh 'kubectl apply -f ./app/manifests/service.yaml'
+            sh 'kubectl apply -f ./app/manifests/hpa.yaml'
+            sh 'kubectl apply -f ./app/manifests/ingress.yaml'
+            sh 'kubectl apply --recursive -f ./app/manifests/'            
 
           }
         }
