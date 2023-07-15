@@ -25,14 +25,7 @@ pipeline {
           def buildNumber = env.BUILD_NUMBER ?: '1' 
           def dockerTag = "${dockerImage}:0.${buildNumber}"           
 
-          // Dockerfile'ı Kaniko'nun çalışma dizinine kopyala
-          sh "cp ${dockerfile} /kaniko/${dockerfile}"
-
-          // Docker imajını Kaniko ile build e
-          sh "kaniko --context=/kaniko --dockerfile=${dockerfile} --destination=${dockerImage}:0.${buildNumber} --insecure --single-snapshot"
-
-          // Docker imajını hedef registriye push et
-          sh "kaniko --context=/kaniko --dockerfile=${dockerfile} --destination=${dockerImage}:0.${buildNumber} --insecure --push"
+          sh "ls -ltra && pwd"
           sh '''
           /kaniko/executor --dockerfile `pwd`./app/Dockerfile \
                            --context `pwd` \
