@@ -15,7 +15,7 @@ pipeline {
           def imageName = 'canerturkaslan/flask-app'
           def dockerfile = 'Dockerfile'
           def buildNumber = env.BUILD_NUMBER ?: '1' 
-          def dockerTag = "${imageName}:${buildNumber}" 
+          def dockerTag = "${imageName}:0.${buildNumber}" 
           
           docker.build(imageName, "-f ${dockerfile} -t ${dockerTag} .")          
           
