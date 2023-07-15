@@ -1,6 +1,9 @@
 pipeline {
-  agent any 
-
+  agent {
+    kubernetes {
+      yamlFile './app/builder.yaml'
+    }
+  }
   
   stages {
     stage('Checkout') {
