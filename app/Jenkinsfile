@@ -15,21 +15,14 @@ pipeline {
     stage('Build and Push') {
   
     steps {
-      container(name: 'kaniko', shell: '/busybox/sh') {
+      container(name: 'kaniko') {
         // Kaniko ile Docker imajını build ve push işlemi
         script {
-          def dockerImage = 'canerturkaslan/flask-app'
-          def dockerfile = '/app/Dockerfile'
-          def buildNumber = env.BUILD_NUMBER ?: '1' 
-          def dockerTag = "${dockerImage}:0.${buildNumber}"           
-
-          sh "ls -ltra && pwd"
           sh '''
-          echo ${dockerImage}:0.${buildNumber} \
-          echo $dockerImage:0.$buildNumber
+
           /kaniko/executor --dockerfile `pwd`/app/Dockerfile \
                            --context `pwd` \
-                           --destination=${dockerImage}:0.${buildNumber}
+                           --destination=canerturkaslan/flask-app:0.${BUILD_NUMBER}
           '''
         }
       }
