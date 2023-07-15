@@ -1,6 +1,23 @@
 pipeline {
-  agent any
-  
+  agent {
+    kubernetes {
+      // Kubernetes ajanı konfigürasyonu
+      yaml """
+      apiVersion: v1
+      kind: Pod
+      metadata:
+        labels:
+          kaniko: agent
+      spec:
+        containers:
+        - name: kaniko
+          image: gcr.io/kaniko-project/executor:v1.5.0
+          command:
+          - /busybox/cat
+          tty: true
+      """
+    }
+  }
   stages {
     stage('Checkout') {
       steps {
@@ -8,6 +25,28 @@ pipeline {
       }
     }
     
+    stage('Build and Push') {
+    steps {
+      container('kaniko') {
+        // Kaniko ile Docker imajını build ve push işlemi
+        script {
+          def dockerImage = 'canerturkaslan/flask-app'
+          def dockerfile = './app/Dockerfile'
+          def buildNumber = env.BUILD_NUMBER ?: '1' 
+          def dockerTag = "${imageName}:0.${buildNumber}"           
+
+          // Dockerfile'ı Kaniko'nun çalışma dizinine kopyala
+          sh "cp ${dockerfile} /kaniko/${dockerfile}"
+
+          // Docker imajını Kaniko ile build e
+          sh "kaniko --context=/kaniko --dockerfile=${dockerfile} --destination=${imageName}:0.${buildNumber} --insecure --single-snapshot"
+
+          // Docker imajını hedef registriye push et
+          sh "kaniko --context=/kaniko --dockerfile=${dockerfile} --destination=${imageName}:0.${buildNumber} --insecure --push"
+        }
+      }
+    }
+  }    
     stage('Build') {
       steps {
         // Docker imajını oluştur
