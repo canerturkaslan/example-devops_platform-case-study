@@ -36,23 +36,25 @@ pipeline {
  
 
 
+    stage('Deploy App to Kubernetes') {     
+      steps {
+        container('kubectl') {
+          withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) {
 
-stage('Deploy App to Kubernetes') {     
-  steps {
-    container('kubectl') {
-      withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) {
-        
-        if (params.externalTag != null && params.externalTag != '') {
-          sh 'sed -i "s/<IMAGE_TAG>/${params.externalTag}/" ./app/manifests/deployment.yaml'
-        } else {
-          sh 'sed -i "s/<IMAGE_TAG>/${BUILD_NUMBER}/" ./app/manifests/deployment.yaml'
+            script {
+              if (params.externalTag != null && params.externalTag != '') {
+                sh 'sed -i "s/<IMAGE_TAG>/${params.externalTag}/" ./app/manifests/deployment.yaml'
+              } else {
+                sh 'sed -i "s/<IMAGE_TAG>/${BUILD_NUMBER}/" ./app/manifests/deployment.yaml'
+              }
+            }
+            
+            sh 'kubectl apply --recursive -f ./app/manifests/ -n default'
+          }
         }
-        
-        sh 'kubectl apply --recursive -f ./app/manifests/ -n default'
       }
     }
-  }
-}
+
     
 
   }
