@@ -1,0 +1,35 @@
+# Fluent Bit values.yaml
+
+## Fluent Bit pod tolerations
+tolerations:
+  - key: node-role.kubernetes.io/control-plane
+    operator: Exists
+    effect: NoSchedule
+
+## Fluent Bit pod resources
+resources:
+  requests:
+    cpu: 100m
+    memory: 256Mi
+  limits:
+    cpu: 200m
+    memory: 362Mi
+
+
+config:
+  outputs: |
+    [OUTPUT]
+        Name            es
+        Match           *
+        Host            elasticsearch-master
+        Port            9200
+        tls             On
+        tls.verify      Off
+        HTTP_User       elastic
+        HTTP_Passwd     caner12345
+        Logstash_Format Off
+        Retry_Limit False
+        Type  _doc
+        Time_Key @timestamp
+        Replace_Dots On
+        Suppress_Type_Name On    

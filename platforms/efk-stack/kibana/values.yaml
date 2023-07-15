@@ -1,0 +1,19 @@
+resources:
+  requests:
+    cpu: 100m
+    memory: 512Mi
+  limits:
+    cpu: 200m
+    memory: 760Mi
+
+## Authentication
+env:
+  - name: ELASTICSEARCH_USERNAME
+    value: "kibana_system_user"
+  - name: ELASTICSEARCH_PASSWORD
+    value: "caner12345"
+
+## Service type
+service:
+  type: NodePort
+

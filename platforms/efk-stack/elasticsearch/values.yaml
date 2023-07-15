@@ -1,0 +1,64 @@
+# Elasticsearch values.yaml
+replicas: 1
+minimumMasterNodes: 1
+## Elasticsearch cluster settings
+clusterName: "elasticsearch"
+nodeGroup: "master"
+
+## Enable X-Pack Security
+xpackSecurity:
+  enabled: true
+
+roles:
+  - master
+  - ingest
+  - data
+
+## Elasticsearch node settings
+nodeSets:
+  - name: default
+    count: 1
+    config:
+      node.master: true
+      node.data: true
+      node.ingest: true
+      node.attr.box_type: hot
+    podTemplate:
+      metadata:
+        annotations:
+          co.elastic.logs/disable-output: "true"
+          co.elastic.metrics/disable-host-metrics: "true"
+      spec:
+        terminationGracePeriodSeconds: 0
+
+## Elasticsearch pod resources
+resources:
+  requests:
+    cpu: 500m
+    memory: 1Gi
+  limits:
+    cpu: 1
+    memory: 1500Mi
+
+extraEnvs:
+  - name: ELASTIC_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: elasticsearch-master-credentials
+        key: password
+## Disable persistence
+persistence:
+  enabled: false
+
+
+
+secret:
+  password: "caner12345"
+
+esConfig:
+  elasticsearch.yml: |
+    xpack.security.enabled: true
+
+
+
+    
