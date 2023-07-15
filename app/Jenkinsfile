@@ -14,7 +14,7 @@ pipeline {
                 PATH = "/busybox:/kaniko:$PATH"
               }      
     steps {
-      container('kaniko', shell: '/busybox/sh') {
+      container(name: 'kaniko', shell: '/busybox/sh') {
         // Kaniko ile Docker imajını build ve push işlemi
         script {
           def dockerImage = 'canerturkaslan/flask-app'
