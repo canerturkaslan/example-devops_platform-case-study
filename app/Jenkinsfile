@@ -21,7 +21,7 @@ pipeline {
           sh '''
 
           /kaniko/executor --dockerfile `pwd`/app/Dockerfile \
-                           --context `pwd` \
+                           --context `pwd`/app \
                            --destination=canerturkaslan/flask-app:0.${BUILD_NUMBER}
           '''
         }
