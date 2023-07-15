@@ -29,7 +29,7 @@ pipeline {
           sh '''
           /kaniko/executor --dockerfile `pwd`/app/Dockerfile \
                            --context `pwd` \
-                           --destination==${dockerImage}:0.${buildNumber}
+                           --destination=${dockerImage}:0.${buildNumber}
           '''
         }
       }
