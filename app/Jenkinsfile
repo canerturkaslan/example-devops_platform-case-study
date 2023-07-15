@@ -39,6 +39,7 @@ pipeline {
       steps {
         container('kubectl') {
           withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) {
+            sh 'ls -ltrah && pwd'
             sh 'sed -i "s/<IMAGE_TAG>/${BUILD_NUMBER}/" ./manifests/deployment.yaml'
             sh 'kubectl apply -f ./manifests/deployment.yaml'
             sh 'kubectl apply -f ./manifests/service.yaml'
