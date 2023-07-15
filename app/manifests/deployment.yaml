@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-app
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: flask-app
+  template:
+    metadata:
+      labels:
+        app: flask-app
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - flask-app
+                topologyKey: "kubernetes.io/hostname"
+      imagePullSecrets:
+      - name: regcred                
+      containers:
+        - name: flask-app
+          image: canerturkaslan/flask-app:0.2
+          imagePullPolicy: IfNotPresent       
+          ports:
+            - containerPort: 5000
+          resources:
+            limits:
+              cpu: "150m"
+              memory: "200Mi"
+            requests:
+              cpu: "50m"
+              memory: "100Mi"
+
