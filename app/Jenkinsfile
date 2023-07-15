@@ -43,7 +43,7 @@ pipeline {
 
             script {
               if (params.externalTag != null && params.externalTag != '') {
-                sh 'sed -i "s/<IMAGE_TAG>/${params.externalTag}/" ./app/manifests/deployment.yaml'
+                sh "sed -i 's|<IMAGE_TAG>|${params.externalTag}|' ./app/manifests/deployment.yaml"
               } else {
                 sh 'sed -i "s/<IMAGE_TAG>/${BUILD_NUMBER}/" ./app/manifests/deployment.yaml'
               }
