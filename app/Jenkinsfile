@@ -37,10 +37,10 @@ pipeline {
 
     stage('Deploy') {
       steps {
-          ansiblePlaybook('./app/deploy.yaml') {
-              credentialsId('kubeconfig')
-              become(true)
-          }
+        ansiblePlaybook(
+            playbook: './app/deploy.yaml',
+            credentialsId: 'kubeconfig',
+            colorized: true)
       }
     }
     
