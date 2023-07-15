@@ -35,12 +35,22 @@ pipeline {
   }    
  
 
+        container('kubectl') {
+          withCredentials([file(credentialsId: 'mykubeconfig', variable: 'KUBECONFIG')]) {
+            sh 'sed -i "s/<TAG>/${BUILD_NUMBER}/" myweb.yaml'
+            sh 'kubectl apply -f myweb.yaml'
+          }
+
+
     stage('Deploy App to Kubernetes') {     
       steps {
         container('kubectl') {
           withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) {
-            sh 'sed -i "s/<IMAGE_TAG>/${BUILD_NUMBER}/" deployment.yaml'
-            sh 'kubectl apply --recursive -f ./manifests'
+            sh 'sed -i "s/<IMAGE_TAG>/${BUILD_NUMBER}/" ./manifests/deployment.yaml'
+            sh 'kubectl apply -f ./manifests/deployment.yaml'
+            sh 'kubectl apply -f ./manifests/service.yaml'
+            sh 'kubectl apply -f ./manifests/hpa.yaml'
+            sh 'kubectl apply -f ./manifests/ingress.yaml'
 
           }
         }
