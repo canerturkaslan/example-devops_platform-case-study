@@ -13,9 +13,7 @@ pipeline {
     }
     
     stage('Build and Push') {
-      environment {
-                PATH = "/busybox:/kaniko:$PATH"
-              }      
+  
     steps {
       container(name: 'kaniko', shell: '/busybox/sh') {
         // Kaniko ile Docker imajını build ve push işlemi
@@ -27,6 +25,8 @@ pipeline {
 
           sh "ls -ltra && pwd"
           sh '''
+          echo ${dockerImage}:0.${buildNumber} \
+          echo $dockerImage:0.$buildNumber
           /kaniko/executor --dockerfile `pwd`/app/Dockerfile \
                            --context `pwd` \
                            --destination=${dockerImage}:0.${buildNumber}
