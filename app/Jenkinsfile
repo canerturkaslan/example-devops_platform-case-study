@@ -21,7 +21,7 @@ pipeline {
         // Kaniko ile Docker imajını build ve push işlemi
         script {
           def dockerImage = 'canerturkaslan/flask-app'
-          def dockerfile = './app/Dockerfile'
+          def dockerfile = '/app/Dockerfile'
           def buildNumber = env.BUILD_NUMBER ?: '1' 
           def dockerTag = "${dockerImage}:0.${buildNumber}"           
 
