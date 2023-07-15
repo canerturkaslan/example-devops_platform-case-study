@@ -13,7 +13,7 @@ pipeline {
     }
     
     stage('Build and Push') {
-  
+    when { expression { return params.runBuild } }
     steps {
       container(name: 'kaniko') {
         // Kaniko ile Docker imajını build ve push işlemi
