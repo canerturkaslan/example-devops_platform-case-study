@@ -27,7 +27,7 @@ pipeline {
 
           sh "ls -ltra && pwd"
           sh '''
-          /kaniko/executor --dockerfile `pwd`./app/Dockerfile \
+          /kaniko/executor --dockerfile `pwd`/app/Dockerfile \
                            --context `pwd` \
                            --destination==${dockerImage}:0.${buildNumber}
           '''
