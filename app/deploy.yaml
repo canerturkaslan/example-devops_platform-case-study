@@ -1,0 +1,63 @@
+---
+- name: Deploy Kubernetes Manifests
+  hosts: localhost
+  gather_facts: false
+
+  vars:
+    kube_namespace: default
+    deployment_name: flask-app
+    service_name: flask-app-service
+    image_tag: latest
+    manifest_path: ./manifest/
+
+  tasks:
+    - name: Create Namespace
+      k8s:
+        api_version: v1
+        kind: Namespace
+        name: "{{ kube_namespace }}"
+        state: present
+
+    - name: Apply Deployment
+      k8s:
+        src: "{{ manifest_path }}/deployment.yaml"
+        namespace: "{{ kube_namespace }}"
+        force: yes
+        validate: no
+        recreate_pods: yes
+
+    - name: Apply HPA
+      k8s:
+        src: "{{ manifest_path }}/hpa.yaml"
+        namespace: "{{ kube_namespace }}"
+        force: yes
+        validate: no     
+
+    - name: Update Deployment Image
+      k8s:
+        api_version: apps/v1
+        kind: Deployment
+        name: "{{ deployment_name }}"
+        namespace: "{{ kube_namespace }}"
+        definition:
+          spec:
+            template:
+              spec:
+                containers:
+                  - name: flask-app
+                    image: canerturkaslan/flask-app:{{ image_tag }}
+
+    - name: Apply Service
+      k8s:
+        src: "{{ manifest_path }}/service.yaml"
+        namespace: "{{ kube_namespace }}"
+        force: yes
+        validate: no
+
+    - name: Apply Ingress
+      k8s:
+        src: "{{ manifest_path }}/ingress.yaml"
+        namespace: "{{ kube_namespace }}"
+        force: yes
+        validate: no        
+

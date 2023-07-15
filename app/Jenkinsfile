@@ -1,4 +1,9 @@
 pipeline {
+
+  options {
+    ansiColor('xterm')
+  }
+
   agent {
     kubernetes {
       yamlFile './app/builder.yaml'
@@ -29,6 +34,16 @@ pipeline {
     }
   }    
  
+
+    stage('Deploy') {
+      steps {
+          ansiblePlaybook('app/playbook.yml') {
+              credentialsId('kubeconfig')
+              become(true)
+          }
+      }
+    }
+    
 
   }
 }
