@@ -31,6 +31,7 @@ pipeline {
           /kaniko/executor --dockerfile `pwd`./app/Dockerfile \
                            --context `pwd` \
                            --destination==${imageName}:0.${buildNumber}
+          '''
         }
       }
     }
