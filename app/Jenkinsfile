@@ -1,0 +1,42 @@
+pipeline {
+  agent any
+  
+  stages {
+    stage('Checkout') {
+      steps {
+        checkout scm
+      }
+    }
+    
+    stage('Build') {
+      steps {
+        // Docker imajını oluştur
+        script {
+          def imageName = 'canerturkaslan/flask-app'
+          def dockerfile = 'Dockerfile'
+          def buildNumber = env.BUILD_NUMBER ?: '1' 
+          def dockerTag = "${imageName}:${buildNumber}" 
+          
+          docker.build(imageName, "-f ${dockerfile} -t ${dockerTag} .")          
+          
+        }
+      }
+    }
+        
+    stage('Publish') {
+      steps {
+        // Docker imajını yayınla
+        script {
+          def imageName = 'canerturkaslan/flask-app'
+          def buildNumber = env.BUILD_NUMBER ?: '1'
+          def dockerTag = "${imageName}:0.${buildNumber}"
+          
+          docker.withRegistry('https://registry.hub.docker.com', 'b7ba9e34-2c18-42f7-a5df-887cc8ccbed3') {
+             docker.image(imageName).push(dockerTag)
+             docker.image(imageName).push('canerturkaslan/flask-app:latest')
+          }
+        }
+      }
+    }
+  }
+}
