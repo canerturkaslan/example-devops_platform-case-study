@@ -33,6 +33,17 @@ spec:
           ports:
             - containerPort: 5000
               name: http
+          readinessProbe:
+            httpGet:
+              path: /api
+              port: 5000
+            initialDelaySeconds: 3
+            periodSeconds: 5
+          livenessProbe:
+            tcpSocket:
+              port: 5000
+            initialDelaySeconds: 4
+            periodSeconds: 10              
           resources:
             limits:
               cpu: "150m"
