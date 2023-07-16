@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployment-validation-webhook
+  namespace: deployment-validate
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: deployment-validation-webhook
+  template:
+    metadata:
+      labels:
+        app: deployment-validation-webhook
+    spec:
+      containers:
+        - name: webhook-app
+          image: canerturkaslan/webhook-app:0.7
+          ports:
+            - containerPort: 4430
+          volumeMounts:
+            - name: tls-certs
+              mountPath: "/app/certs"
+              readOnly: true
+      volumes:
+        - name: tls-certs
+          secret:
+            secretName: webhook-certs

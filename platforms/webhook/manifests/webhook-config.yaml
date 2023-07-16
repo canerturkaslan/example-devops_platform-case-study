@@ -1,0 +1,27 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingWebhookConfiguration
+metadata:
+  name: deployment-validation-webhook
+webhooks:
+  - name: deployment-validation-webhook.deployment-validate.svc
+    sideEffects: None
+    admissionReviewVersions: ["v1"]
+    rules:
+      - apiGroups: ["apps"]
+        apiVersions:
+          - v1
+        operations:
+          - CREATE
+          - UPDATE
+        resources:
+          - deployments
+    clientConfig:
+      service:
+        name: deployment-validation-webhook
+        namespace: deployment-validate
+        port: 4430
+        path: "/validate/deployment"
+      caBundle: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURpVENDQW5HZ0F3SUJBZ0lVRFdCaWhlTmp4R01tZlZqeEc1cjdkMTFiendJd0RRWUpLb1pJaHZjTkFRRUwKQlFBd1FERStNRHdHQTFVRUF3dzFaR1Z3Ykc5NWJXVnVkQzEyWVd4cFpHRjBhVzl1TFhkbFltaHZiMnN1WkdWdwpiRzk1YldWdWRDMTJZV3hwWkdGMFpTNXpkbU13SGhjTk1qTXdOekUyTURBeE16STFXaGNOTWpRd056RTFNREF4Ck16STFXakJBTVQ0d1BBWURWUVFERERWa1pYQnNiM2x0Wlc1MExYWmhiR2xrWVhScGIyNHRkMlZpYUc5dmF5NWsKWlhCc2IzbHRaVzUwTFhaaGJHbGtZWFJsTG5OMll6Q0NBU0l3RFFZSktvWklodmNOQVFFQkJRQURnZ0VQQURDQwpBUW9DZ2dFQkFNSUVKR2hKSmJuSXJtdnFMdGpxTmtIWXNxYk9HUnppWUZDUVJsZlJrOVdyQ0RnQzdxeUg2OVpHCnNUQ2RJdWZEalRsTk9zMVdubUhDeHcyeWhobDVGL2t5ZEk5dGg1SDdUOXFWL0xlenVTZGRGb2wwbVVnL1l5bGUKTVI5VnY5RWFUV05hSEJRTnVrcklSclhBT3JBMDZWTGRqWXhqV24wbklpSk1sM2lhYlVjWU1RaTlqVDljakpzOApUNXN6cnozSGZzTGp3N3l0bHdyYlFld2piV3VjY3JDZ3BNS3AwUzl1NzhUYUVXWDFOUTdsMWVsVHZsdU1kd00vCmh0NVRBMjdXRDBOcnBhNVRCUnZpTUVtS3E1WDdudUxWcjgyMUlQakdYMVJKNXZaVmxqQ1lHeEtkblV0cnVGYmIKOE96U0xoeTc2bDVxcmc2QzlzT1JLckNjUVJQeW5KVUNBd0VBQWFON01Ia3dDUVlEVlIwVEJBSXdBREFMQmdOVgpIUThFQkFNQ0JlQXdRQVlEVlIwUkJEa3dONEkxWkdWd2JHOTViV1Z1ZEMxMllXeHBaR0YwYVc5dUxYZGxZbWh2CmIyc3VaR1Z3Ykc5NWJXVnVkQzEyWVd4cFpHRjBaUzV6ZG1Nd0hRWURWUjBPQkJZRUZEMDZzeW4wNjg5TTMxMksKNS90b21qSUw0KzJaTUEwR0NTcUdTSWIzRFFFQkN3VUFBNElCQVFCcWl3M0o1MmoxSlVBdU11T2NLcjl5Z2JOUwpLRkE0SW0yNjlNaWF2TFR2UURSK0thakdWU096VnFEdWRISFQ3eUFXRkVvT3F0MWEvK2dXUGpiaG85V2xUWlBRCnhnNHN3bkx5eWJ6ZGlqUkhSRG9PWmdMMGNPQTZpUEplQmJ2dUtBcDN6aHJLUlBGUmsxalNRK1NUUGJzR3RNLzYKdVZleWswcW9yV2UxdEsrM2h0dWxpVU1iMTVESjNkSHV6allNODhRVytEQmwzN3FhRWpMVmhiTHlENWhMZ2hXegpoQ3hrRUVGVGlKdDNweU9DM2l0bTRSbU1nZUxYY29ldFMxSjBDLzJ2TDN2aStvNG11Q3VGV2hiNDRpM2NuK3UyCmx0ekFLZWRUYzdvUS9FT3pST2tXSkZDSTYzcTRRenVHNGY1OU14N0xIQ3NGRzN2b0Z4Uy8rU2tMblMwbAotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==
+    namespaceSelector:
+      matchLabels:
+        validate-namespace: test
