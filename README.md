@@ -332,7 +332,7 @@ spec:
       app: my-deployment
   topologyKey: kubernetes.io/hostname
 
-Equal Distribution, up to 2 pods per node  
+#Equal Distribution, up to 2 pods per node  
 apiVersion: policy/v1beta1
 kind: PodDisruptionBudget
 metadata:
