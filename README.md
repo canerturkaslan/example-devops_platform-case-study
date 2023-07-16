@@ -1,4 +1,26 @@
-## Dream Games Case Study
+# Dream Games Case Study
+
+## CONTENTS
+
+*   [Step 1 Flask-App](#step-1-flask-app)
+*   [Step 2.1 Kubernetes Cluster](#step-21-kubernetes-cluster)
+*   [Step 2.2 Jenkins](#step-22-jenkins)
+*   [Step 2.3 Prometheus-Alertmanager-Grafana Stack](#step-23-prometheus-alertmanager-grafana-stack)
+*   [Step 2.4.a Log Index](#step-24a-log-index)
+*   [Step 2.4.b Security](#step-24b-security)
+*   [Step 2.4.c Log Rotate, Elasticsearch](#step-24c-log-rotate-elasticsearch)
+*   [Step 3.1 Kubernetes Manifests](#step-31-kubernetes-manifests)
+*   [Step 3.2 Nginx-Ingress](#step-32-nginx-ingress)
+*   [Step 3.2.a Soft Pod Affinity](#step-32a-soft-pod-affinity)
+*   [Step 3.2.b Probes](#step-32b-probes)
+*   [Step 3.3 and 3.4 Jenkins CI&CD](#step-33-and-34-jenkins-cicd)
+*   [Step 3.5 Webhook](#step-35-webhook)
+*   [Step 4.1 PDP, Priority, Preemption](#step-41-pdp-priority-preemption)
+*   [Step 4.2 Canary, ArgoCD, Istio](#step-42-canary-argocd-istio)
+*   [Step 4.3.a HPA](#step-43a-hpa)
+*   [Step 4.3.b Karpenter AutoScaling](#step-43b-karpenter-autoscaling)
+
+
 
 ### Step 1 Flask-App:
 
