@@ -2,13 +2,13 @@
 
 ### Step 1 Flask-App:
 
-I don't know much about Java, when I looked at the repository on github, I realized that someone else had fork here and solved the case. I chose to develop from scratch using Python so that the things we do are not the same. 
+I don't know much about Java, when I looked at the repository on github, I realized that someone else had fork here and solved the case. I chose to develop from scratch using Python so that the things we do are not the same. 
 
 All the steps are as requested, I have written the Dockerfile in multistage structure and returned the parameters of the query to the endpoint to stdout.
 
 ### Step 2.1 Kubernetes Cluster:
 
-I created Kubernetes with vagrantfile on my local computer using Libvirt(KVM/QEMU). 
+I created Kubernetes with vagrantfile on my local computer using Libvirt(KVM/QEMU). 
 
 Master and worker nodes each have 2 CPUs.  
 Master node has 4096MB ram, worker nodes have 5192 MB ram.
@@ -31,7 +31,7 @@ Here, I created the application's grafana dashboards with configmap and made it 
 
 ### Step 2.4 Elasticsearch, Kibana, Fluent-bit:
 
-Using elastic/elasticsearch, elastic/kibana and fluent/fluen-bit helm charts, I have set up an EFK stack with values.yamls separately. 
+Using elastic/elasticsearch, elastic/kibana and fluent/fluen-bit helm charts, I have set up an EFK stack with values.yamls separately. 
 
 I installed Elasticsearch as 1 node with master-ingest-data roles. (due to lack of resources)
 
@@ -345,3 +345,24 @@ spec:
   minAvailable: 2
   
 ```
+
+### Step 4.2 Canary, ArgoCD, Istio:
+
+If I were to implement canary deployments, I would use Istio for managing traffic splitting and routing between different versions of my application. I would define the application manifests, including the deployment, service, and Istio VirtualService resources, to specify the canary deployment strategy such as traffic splitting rules.
+
+In my pipeline, I would integrate ArgoCD and configure it to work with Argo Rollouts. Argo Rollouts is an extension to ArgoCD that provides advanced deployment strategies, including canary deployments. By enabling Argo Rollouts integration, I would have the ability to manage canary deployments seamlessly.
+
+Once the canary deployment is in place, I would monitor its performance and analyze metrics and user feedback. Based on the analysis results, I would decide whether to promote the canary deployment to a wider audience or roll back if any issues are detected.
+
+By following this approach, I can ensure smooth canary deployments using Istio for traffic management and ArgoCD with Argo Rollouts for pipeline integration and management of the deployment process.  
+
+### Step 4.3.a HPA:
+
+To ensure that the application scales out/in appropriately before/after a certain period of time, I would use Horizontal Pod Autoscaling (HPA).   
+HPA automatically adjusts the number of replicas for a Deployment based on the observed CPU utilization or other custom metrics.   
+By defining appropriate metrics and thresholds, HPA can automatically scale the application horizontally to handle increased traffic during peak times.   
+This ensures that the application can dynamically scale up or down based on demand, preventing slowness and ensuring optimal performance.  
+
+### Step 4.3.b Karpenter AutoScaling
+
+To address the situation where there are not enough resources on the cluster during scaling at peak times, I would utilize Karpenter. Karpenter is a Kubernetes-based solution that provides automated cluster autoscaling. By defining scaling profiles and scheduling rules, Karpenter can automatically scale the cluster resources, such as nodes, based on predetermined conditions. For example, I can configure Karpenter to increase the number of nodes before certain times to ensure sufficient resources are available during peak traffic. This proactive scaling approach allows for seamless handling of increased load without slowing down the system.
