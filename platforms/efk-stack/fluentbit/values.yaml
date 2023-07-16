@@ -21,7 +21,7 @@ config:
     [OUTPUT]
         Name            es
         Match           *
-        Host            elasticsearch-master
+        Host            security-master
         Port            9200
         tls             On
         tls.verify      Off
