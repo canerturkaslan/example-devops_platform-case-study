@@ -1,6 +1,10 @@
 from flask import Flask, request
 
+from prometheus_flask_exporter import PrometheusMetrics
+
 app = Flask(__name__)
+metrics = PrometheusMetrics(app)
+
 
 @app.route('/api')
 def print_query_parameters():
