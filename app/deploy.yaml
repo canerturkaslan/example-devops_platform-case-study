@@ -7,7 +7,7 @@
     kube_namespace: default
     deployment_name: flask-app
     service_name: flask-app-service
-    manifest_path: ./manifest/
+    manifest_path: manifest
 
   tasks:
     - name: Create Namespace
@@ -19,7 +19,7 @@
 
     - name: Create Kubernetes YAML from Jinja2 template
       template:
-        src: "{{ manifest_path }}/deployment.j2"
+        src: "deployment.j2"
         dest: "{{ manifest_path }}/deployment.yaml"
 
 
