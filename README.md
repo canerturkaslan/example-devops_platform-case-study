@@ -39,7 +39,11 @@ Kubernetes version 1.26.0 was installed using kubeadm and shell scripts.
 
 Containerd is selected as the container runtime, calico is selected as the Container network interface plugin.
 
-#TODO OPTIMIZATION AND TUNING PERFORMANCE, CONFIG FILE CHANGES FOR METRICS
+I looked at the file descriptor and pid limit values with ulimit -n and ulimit -u and increased it by editing the /etc/security/limits.conf file on the nodes
+I need to set ulimits on worker nodes since containers will inherit the ulimit of worker nodes.
+
+For an application that dynamically uses different port numbers and connection numbers (eg game servers) I set the kernel parameters for TCP connections: 
+I expanded the parameter net.ipv4.ip_local_port_range and increased the parameter net.core.somaxconn This will allow more connections.
 
 ### Step 2.2 Jenkins:
 
