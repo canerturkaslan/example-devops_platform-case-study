@@ -308,9 +308,7 @@ If it was possible here, I think it would be healthier to progress with gitlab. 
 
 ### Step 3.5 Webhook:
 
-Since I have done similar work in a different case before, I made some changes according to the question here, developed and optimized it a little more.
-
-I used python and flask, created a docker image and created files such as webhook-config, certs, deployment, service and tested both true and false condition. I wrote scripts for this that make testing easier.
+I used python and flask, created a docker image and created files such as webhook-config, certs, deployment, service and tested both true and false condition. I wrote bash scripts with curl for this that make testing easier.
 
 ### Step 4.1 PDP, Priority, Preemption
 
