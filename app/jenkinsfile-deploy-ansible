@@ -1,0 +1,52 @@
+      
+pipeline {
+
+  options {
+    ansiColor('xterm')
+  }
+
+  agent {
+    kubernetes {
+      yamlFile './app/deployer.yaml'
+    }
+  }
+  
+  stages {
+    stage('Checkout') {
+      steps {
+        checkout scm
+      }
+    }
+    
+    stage('Build and Push') {
+    when { expression { return params.runBuild } }
+    steps {
+      container(name: 'kaniko') {
+        // Kaniko ile Docker imajını build ve push işlemi
+        script {
+          sh '''
+
+          /kaniko/executor --dockerfile `pwd`/app/Dockerfile \
+                           --context `pwd`/app \
+                           --destination=canerturkaslan/flask-app:0.${BUILD_NUMBER}
+          '''
+        }
+      }
+    }
+  }   
+      stage('Deploy App to Kubernetes with Ansible') {
+        when { expression { return params.runDeploy } }
+        steps {
+          container('ansible') {
+              script {
+                sh '''
+                ansible-playbook ./app/deploy.yaml \
+                                 --extra-vars "image_tag=${params.externalTag != null ? params.externalTag : BUILD_NUMBER}"
+                '''
+              }
+          }
+        }
+      }
+
+  }
+}      

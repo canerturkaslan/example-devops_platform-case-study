@@ -1,0 +1,10 @@
+# Base image
+FROM cytopia/ansible:2.13
+
+# Install kubernetes pip packages
+RUN pip install kubernetes
+
+
+# Set working directory
+WORKDIR /root
+RUN mkdir -p /root/.kube

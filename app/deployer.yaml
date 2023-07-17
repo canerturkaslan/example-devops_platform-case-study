@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: ansible
+spec:
+  containers:
+  - name: ansible
+    image: canerturkaslan/ansible-alpine:0.1
+    command:
+    - /bin/cat
+    tty: true    
+    volumeMounts:
+    - name: kubeconfig-volume
+      mountPath: /root/.kube/config
+      subPath: config
+  volumes:
+  - name: kubeconfig-volume
+    secret:
+      secretName: kubeconfig-secret
