@@ -7,7 +7,7 @@
     kube_namespace: default
     deployment_name: flask-app
     service_name: flask-app-service
-    manifest_path: manifest
+    manifest_path: /home/jenkins/agent/workspace/flask-ansible/app/manifests
 
   tasks:
     - name: Create Namespace
@@ -25,7 +25,7 @@
 
     - name: Apply Deployment
       k8s:
-        dest: "{{ manifest_path }}/deployment.yaml"
+        src: "{{ manifest_path }}/deployment.yaml"
         namespace: "{{ kube_namespace }}"
 
 
