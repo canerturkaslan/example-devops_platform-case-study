@@ -17,9 +17,14 @@
         name: "{{ kube_namespace }}"
         state: present
 
+    - name: Create Kubernetes YAML from Jinja2 template
+      template:
+        src: "{{ manifest_path }}/deployment.j2"
+        dest: "{{ manifest_path }}/deployment.yaml"
+
+
     - name: Apply Deployment
       k8s:
-        src: "{{ manifest_path }}/deployment.j2"
         dest: "{{ manifest_path }}/deployment.yaml"
         namespace: "{{ kube_namespace }}"
 
