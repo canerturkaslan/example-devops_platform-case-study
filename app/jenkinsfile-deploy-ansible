@@ -39,10 +39,10 @@ pipeline {
         steps {
           container('ansible') {
               script {
-                sh '''
+                sh """
                 ansible-playbook ./app/deploy.yaml \
-                                 --extra-vars "image_tag=${params.externalTag != null ? params.externalTag : BUILD_NUMBER}"
-                '''
+                                 --extra-vars \"image_tag=${params.externalTag != null ? params.externalTag : BUILD_NUMBER}\"
+                """
               }
           }
         }
