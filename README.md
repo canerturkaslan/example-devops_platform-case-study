@@ -30,7 +30,7 @@ All the steps are as requested, I have written the Dockerfile in multistage stru
 
 ### Step 2.1 Kubernetes Cluster:
 
-I created Kubernetes with vagrantfile on my local computer using Libvirt(KVM/QEMU). 
+I created Kubernetes with vagrantfile on my local computer using Libvirt(KVM/QEMU).
 
 Master and worker nodes each have 2 CPUs.  
 Master node has 4096MB ram, worker nodes have 5192 MB ram.
@@ -39,11 +39,11 @@ Kubernetes version 1.26.0 was installed using kubeadm and shell scripts.
 
 Containerd is selected as the container runtime, calico is selected as the Container network interface plugin.
 
-I looked at the file descriptor and pid limit values with ulimit -n and ulimit -u and increased it by editing the /etc/security/limits.conf file on the nodes
+I looked at the file descriptor and pid limit values with **ulimit -n** and **ulimit -u** and increased it by editing the **/etc/security/limits.conf** file on the nodes  
 I need to set ulimits on worker nodes since containers will inherit the ulimit of worker nodes.
 
-For an application that dynamically uses different port numbers and connection numbers (eg game servers) I set the kernel parameters for TCP connections: 
-I expanded the parameter net.ipv4.ip_local_port_range and increased the parameter net.core.somaxconn This will allow more connections.
+For an application that dynamically uses different port numbers and connection numbers (eg game servers) I set the kernel parameters for TCP connections:  
+I expanded the parameter **net.ipv4.ip\_local\_port\_range** and increased the parameter **net.core.somaxconn** This will allow more connections.
 
 ### Step 2.2 Jenkins:
 
