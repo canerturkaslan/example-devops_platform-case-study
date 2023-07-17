@@ -22,35 +22,28 @@
         src: "{{ manifest_path }}/deployment.j2"
         dest: "{{ manifest_path }}/deployment.yaml"
         namespace: "{{ kube_namespace }}"
-        force: yes
-        validate: no
-        recreate_pods: yes
+
 
     - name: Apply HPA
       k8s:
         src: "{{ manifest_path }}/hpa.yaml"
         namespace: "{{ kube_namespace }}"
-        force: yes
-        validate: no     
 
     - name: Apply Service
       k8s:
         src: "{{ manifest_path }}/service.yaml"
         namespace: "{{ kube_namespace }}"
-        force: yes
-        validate: no
+
 
     - name: Apply Ingress
       k8s:
         src: "{{ manifest_path }}/ingress.yaml"
         namespace: "{{ kube_namespace }}"
-        force: yes
-        validate: no     
+   
 
     - name: Apply Service Monitor
       k8s:
         src: "{{ manifest_path }}/service_monitor.yaml"
         namespace: "{{ kube_namespace }}"
-        force: yes
-        validate: no               
+           
 
