@@ -298,7 +298,11 @@ however, I wrote a playbook similar to the one we use in Türk Telekom to do the
 
 If we were using jenkins on a virtual machine or physical server, I could simply install and run ansible like i did before, the ansible binary would run on the os jenkins is on.
 
-So I used a deploy step in jenkins pipeline using kubectl image as in builder.yaml
+So I used a deploy step in jenkins pipeline using kubectl image as in builder.yaml.
+
+And, About 1 day later, it came to my mind, I realized why I couldn't run an ansible container agent and deploy from there while I could use podTemplate.
+
+I wrote deployer.yaml and a dockerfile image with ansible, kubernetes pip packages in it. Then I successfully performed the deployment step with ansible-playbook by using this and mounting kubeconfig to the container as secret.
 
 If it was possible here, I think it would be healthier to progress with gitlab. It is easier to write and run the pipeline, and it saves time thanks to the features such as the helm-chart repository and the image registry. In my humble opinion, argocd can be used in the CD step.
 
