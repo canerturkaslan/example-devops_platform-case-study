@@ -38,9 +38,6 @@ pipeline {
         when { expression { return params.runDeploy } }
         steps {
           container('ansible') {
-              script {
-
-              }
             script {
               if (params.externalTag != null && params.externalTag != '') {
                 sh """
