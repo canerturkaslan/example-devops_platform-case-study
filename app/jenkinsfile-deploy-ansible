@@ -39,11 +39,21 @@ pipeline {
         steps {
           container('ansible') {
               script {
+
+              }
+            script {
+              if (params.externalTag != null && params.externalTag != '') {
                 sh """
                 ansible-playbook ./app/deploy.yaml \
-                                 --extra-vars \"image_tag=${params.externalTag != null ? params.externalTag : BUILD_NUMBER}\"
+                                 --extra-vars image_tag=${params.externalTag}
+                """
+              } else {
+                sh """
+                ansible-playbook ./app/deploy.yaml \
+                                 --extra-vars image_tag=${BUILD_NUMBER}
                 """
               }
+            }              
           }
         }
       }
