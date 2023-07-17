@@ -4,6 +4,14 @@ metadata:
   name: ansible
 spec:
   containers:
+  - name: kaniko
+    image: gcr.io/kaniko-project/executor:debug
+    command:
+    - /busybox/cat
+    tty: true
+    volumeMounts:
+      - name: kaniko-secret
+        mountPath: /kaniko/.docker  
   - name: ansible
     image: canerturkaslan/ansible-alpine:0.1
     command:
@@ -17,3 +25,9 @@ spec:
   - name: kubeconfig-volume
     secret:
       secretName: kubeconfig-secret
+  - name: kaniko-secret
+    secret:
+      secretName: kaniko-secret
+      items:
+        - key: .dockerconfigjson
+          path: config.json        
