@@ -24,3 +24,4 @@ spec:
         items:
           - key: .dockerconfigjson
             path: config.json
+# ansible image ile deploy dene kubeconfig ver,
