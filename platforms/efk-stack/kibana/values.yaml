@@ -16,7 +16,7 @@ kibanaConfig:
     server.ssl.certificate: /usr/share/kibana/config/certs/elastic-certificate.pem
     server.ssl.enabled: true
     server.ssl.key: /usr/share/kibana/config/certs/elastic-certificate.pem
-    xpack.security.encryptionKey: ${KIBANA_ENCRYPTION_KEY}
+    xpack.security.encryptionKey: qNh4NnZRPL3W3oZmLc3Rh0vsNR0x94cmcnMzg3YICjXDIJ0cwu
 
 protocol: https
 

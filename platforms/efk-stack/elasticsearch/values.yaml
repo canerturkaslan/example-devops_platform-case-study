@@ -65,9 +65,12 @@ extraEnvs:
         key: password
 ## Disable persistence
 persistence:
-  enabled: false
+  enabled: true
 
-
+volumeClaimTemplate:
+  resources:
+    requests:
+      storage: 3Gi
 secret:
   password: "caner12345"
 
