@@ -53,6 +53,9 @@ I used **localPath** for **persistentVolume** (jenkinsData).
 I made customizations with the **kube-prometheus-stack** community chart and installed it with **values.yaml.**  
 Here, I created the application's **grafana dashboards** with **configmap** and made it permanent.
 
+By setting metrics addresses and configurations in components such as kubeproxy, coredns, controller-manager, etcd, scheduler,  
+I ensured that prometheus collects metrics properly over the entire cluster.  
+
 ### Step 2.4 Elasticsearch, Kibana, Fluent-bit:
 
 Using **elastic/elasticsearch, elastic/kibana and fluent/fluen-bit helm charts**, I have set up an EFK stack with **values.yamls** separately.
