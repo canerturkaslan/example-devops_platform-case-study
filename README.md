@@ -67,6 +67,7 @@ When I tried to install with default values, my computer froze and most of what 
 ### Step 2.4.a Log Index
 
 I created the "**fluent-bit**" index written by fluent-bit via kibana.
+I created and linked a **lifecycle policy** for this index
 
 ### Step 2.4.b Security:
 
