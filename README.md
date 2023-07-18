@@ -120,7 +120,7 @@ It can read these files over a same mountPath volume.
 Of course, technologies such as **nfs or cephfs should not be used**, as it will make network calls again, which will lead to a great loss of performance.  
 (This is why we encountered an incident in Türk Telekom.) here I suggest to use **localpath or block volume** as persistentVolume
 
-```plaintext
+```yaml
     spec:
       containers:
         - name: flask-app
@@ -148,7 +148,7 @@ Of course, technologies such as **nfs or cephfs should not be used**, as it will
                 path: filebeat.yml
 ```
 
-```plaintext
+```yaml
 filebeat.inputs:
 - type: log
   paths:
@@ -236,7 +236,7 @@ if __name__ == "__main__":
 
 For a longer storage or analysis afterwards; With **logstash**, we can get log files in the format and size we want. An example can be given as input s3 output as **elasticsearch**.
 
-```plaintext
+```ruby
 input {
   s3 {
     bucket => "flask-app-logs"
@@ -324,7 +324,7 @@ With **nodeAffinity** we can identify higher capacity nodes specific to X.
 
 With pod distribution budget If we want other applications to use the resources on the nodes more **equally**, we can limit the number of replicas that the application will run on certain nodes.
 
-```plaintext
+```yaml
 #create for X
 apiVersion: scheduling.k8s.io/v1
 kind: PriorityClass
