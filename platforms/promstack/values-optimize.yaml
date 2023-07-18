@@ -53,10 +53,10 @@ kube-prometheus-stack:
         memory: 256Mi
 
   kubeScheduler:
-    enabled: false
+    enabled: true
 
   kubeProxy:
-    enabled: false
+    enabled: true
 
   coreDns:
-    enabled: false
+    enabled: true
