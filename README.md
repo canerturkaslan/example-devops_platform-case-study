@@ -1,6 +1,6 @@
-# Dream Games Case Study
+## Dream Games Case Study
 
-## CONTENTS
+## TABLE OF CONTENTS
 
 *   [Step 1 Flask-App](#step-1-flask-app)
 *   [Step 2.1 Kubernetes Cluster](#step-21-kubernetes-cluster)
@@ -20,44 +20,42 @@
 *   [Step 4.3.a HPA](#step-43a-hpa)
 *   [Step 4.3.b Karpenter AutoScaling](#step-43b-karpenter-autoscaling)
 
-
-
 ### Step 1 Flask-App:
 
-I don't know much about Java, when I looked at the repository on github, I realized that someone else had fork here and solved the case. I chose to develop from scratch using Python so that the things we do are not the same. 
+I don't know much about Java, when I looked at the repository on github, I realized that someone else had fork here and solved the case. I chose to develop from scratch using Python so that the things we do are not the same.
 
 All the steps are as requested, I have written the Dockerfile in multistage structure and returned the parameters of the query to the endpoint to stdout.
 
 ### Step 2.1 Kubernetes Cluster:
 
-I created Kubernetes with vagrantfile on my local computer using Libvirt(KVM/QEMU).
+I created Kubernetes with vagrantfile on my local computer using **Libvirt(KVM/QEMU).**
 
-Master and worker nodes each have 2 CPUs.  
-Master node has 4096MB ram, worker nodes have 5192 MB ram.
+Master and worker nodes each have **2 CPUs.**  
+Master node has **4096MB** ram, worker nodes have **5192MB** ram.
 
-Kubernetes version 1.26.0 was installed using kubeadm and shell scripts.
+**Kubernetes version 1.26.0** was installed using kubeadm and shell scripts.
 
-Containerd is selected as the container runtime, calico is selected as the Container network interface plugin.
+**Containerd** is selected as the container runtime, **calico** is selected as the Container network interface plugin.
 
 I looked at the file descriptor and pid limit values with **ulimit -n** and **ulimit -u** and increased it by editing the **/etc/security/limits.conf** file on the nodes  
 I need to set ulimits on worker nodes since containers will inherit the ulimit of worker nodes.
 
-For an application that dynamically uses different port numbers and connection numbers (eg game servers) I set the kernel parameters for TCP connections:  
+For an application that dynamically uses different port numbers and connection numbers (**eg game servers**) I set the kernel parameters for TCP connections:  
 I expanded the parameter **net.ipv4.ip\_local\_port\_range** and increased the parameter **net.core.somaxconn** This will allow more connections.
 
 ### Step 2.2 Jenkins:
 
 I installed Jenkins by customizing helm chart values.yaml and giving nodeSelector-label to run on **NODE 3** only.  
-I used localPath for persistentVolume (jenkinsData).
+I used **localPath** for **persistentVolume** (jenkinsData).
 
 ### Step 2.3 Prometheus-Alertmanager-Grafana Stack:
 
-I made customizations with the kube-prometheus-stack community chart and installed it with values.yaml.  
-Here, I created the application's grafana dashboards with configmap and made it permanent.
+I made customizations with the **kube-prometheus-stack** community chart and installed it with **values.yaml.**  
+Here, I created the application's **grafana dashboards** with **configmap** and made it permanent.
 
 ### Step 2.4 Elasticsearch, Kibana, Fluent-bit:
 
-Using elastic/elasticsearch, elastic/kibana and fluent/fluen-bit helm charts, I have set up an EFK stack with values.yamls separately. 
+Using **elastic/elasticsearch, elastic/kibana and fluent/fluen-bit helm charts**, I have set up an EFK stack with **values.yamls** separately.
 
 I installed Elasticsearch as 1 node with master-ingest-data roles. (due to lack of resources)
 
@@ -65,11 +63,11 @@ When I tried to install with default values, my computer froze and most of what 
 
 ### Step 2.4.a Log Index
 
-I created the "fluent-bit" index written by fluent-bit via kibana.
+I created the "**fluent-bit**" index written by fluent-bit via kibana.
 
 ### Step 2.4.b Security:
 
-Here I made settings such as xpack security and certificates and made it permanent. (to see if it works as a result of restarts.)
+Here I made settings such as **xpack security and certificates** and made it permanent. (to see if it works as a result of restarts.)
 
 ### Step 2.4.c Log Rotate, Elasticsearch:
 
@@ -105,18 +103,22 @@ if __name__ == "__main__":
     app.run()
 ```
 
-*   **Filebeat Sidecar Architecture**
+**Filebeat Sidecar Architecture**
 
-I am using Python's logging module. I create the logger object and define the file\_handler that will write to the log file. I specify the location of the log file and the log level (setLevel) in file\_handler. Next, I create a formatter that determines how the log messages will be formatted and pass this formatter to the file\_handler.
+I am using Python's logging module. I create the logger object and define the file\_handler that will write to the log file.
+
+ I specify the location of the log file and the log level (setLevel) in file\_handler. Next, I create a formatter that determines how the log messages will be formatted and pass this formatter to the file\_handler.
 
 With logger.addHandler(file\_handler) I add file\_handler to the logger object so that log messages are written to the log file.
 
-In this example, I'm having log messages written to /app/logs/app.log instead of stdout. Thus, we can work integrated with Filebeat, which controls the log file size and performs log rotation.
+In this example, I'm having log messages written to /app/logs/app.log instead of stdout. Thus, we can work integrated with **Filebeat**, which controls the log file size and performs log rotation.
 
-Filebeat must be in the same pod as the application container (sidecar)  
-It can read these files over a same mountPath volume.  
-Of course, technologies such as nfs or cephfs should not be used, as it will make network calls again, which will lead to a great loss of performance.  
-(This is why we encountered an incident in Türk Telekom.) here I suggest to use localpath or block volume as persistentVolume
+Filebeat must be in the same pod as the application container (**sidecar**)  
+It can read these files over a same mountPath volume.
+
+  
+Of course, technologies such as **nfs or cephfs should not be used**, as it will make network calls again, which will lead to a great loss of performance.  
+(This is why we encountered an incident in Türk Telekom.) here I suggest to use **localpath or block volume** as persistentVolume
 
 ```plaintext
     spec:
@@ -169,8 +171,8 @@ logging.level: info
 
 *   **Logstash S3 Architecture**
 
-In this example, it uploads the log file to S3 by checking the size of the log file and rotating it if it exceeds the maximum 1GB.  
-A function named rotate\_log\_file is defined. This function performs the rotation of the log file. It rotates the original log file with a new name and uploads the rotated file to S3. If the rotate operation is successful, the rotated file is deleted.
+In this example, it uploads the log file to **S3** by checking the size of the log file and rotating it if it exceeds the maximum 1GB.  
+A function named **rotate\_log\_file** is defined. This function performs the rotation of the log file. It rotates the original log file with a new name and uploads the rotated file to S3. If the rotate operation is successful, the rotated file is **deleted**.
 
 ```python
 import os
@@ -232,7 +234,7 @@ if __name__ == "__main__":
     app.run()
 ```
 
-For a longer storage or analysis afterwards; With logstash, we can get log files in the format and size we want. An example can be given as input s3 output as elasticsearch.
+For a longer storage or analysis afterwards; With **logstash**, we can get log files in the format and size we want. An example can be given as input s3 output as **elasticsearch**.
 
 ```plaintext
 input {
@@ -262,13 +264,15 @@ To collect application specific (flask) metrics, I used the flask-prometheus-met
 
 ### Step 3.2 Nginx-Ingress:
 
-I installed nginx-controller with k8s manifest files. Here I preferred to open the service as nodePort because I do not have any loadbalancer.
+I installed nginx-controller with k8s manifest files. Here I preferred to open the service as nodePort because I do not have any loadbalancer.(maybe metalLB)
 
 After adding my service to ingress here, I verified that nginx-ingress was working fine by entering FQDN in my own /etc/hosts file.
 
 ### Step 3.2.a Soft Pod Affinity:
 
-I used pod anti affinity to distribute pods with the same label to different nodes. Here, I preferred the soft method (**prefferred**, required) because if I wrote required, 1 each of the 4 pods would be placed on 2 nodes and the rest would wait in a **pending** state. When we make soft, we distribute it to the nodes as **homogeneously** as possible. The replica does not matter, if there are 4 nodes 8 pods, 2 each, if there are 3 nodes 9 pods, 3 will be distributed.
+I used pod anti affinity to distribute pods with the same label to different nodes.   
+Here, I preferred the soft method (**prefferred**, required) because if I wrote required, 1 each of the 4 pods would be placed on 2 nodes and the rest would wait in a **pending** state.   
+When we make soft, we distribute it to the nodes as **homogeneously** as possible. The replica count does not matter, if there are 4 nodes 8 pods, 2 each, if there are 3 nodes 9 pods, 3 will be distributed.
 
 ### Step 3.2.b Probes:
 
@@ -279,44 +283,46 @@ I added liveness probe and readiness probe in control of it. While one is checki
 **Jenkins, kaniko**  
 Honestly, the step where I had the most difficulty was jenkins.  
 I haven't written a lot of pipelines from scratch in 2 years.  
-The first point is that I am using containerd and not docker (of course not docker.sock). and containerd has no ability to build an image, just runtime!
+The first point is that I am using **containerd** and not docker (of course not **docker.sock**). and containerd has no ability to build an image, just runtime!
 
 So it delayed my pipeline writing steps a bit as Jenkins is not able to run agent on kubernetes and connect to this socket(/var/run/docker.sock).
 
-For this reason, I decided to choose kaniko.  
+For this reason, I decided to choose **kaniko**.  
 Kaniko is an image build and push tool developed by Google. The most important thing is that it works in a **serverless structure** and does not need to be connected to a **daemon**.(like docker)
 
-For this reason, I created a pod agent with a builder.yaml that contains both kaniko and kubectl containers.
+Then, I created a pod agent with a **builder.yaml** that contains both kaniko and kubectl containers.
 
 **Ansible, kubectl**  
-I wrote an ansible deploy.yaml but installing ansible on jenkins is close to impossible.  
-  
+I wrote an ansible deploy.yaml but installing ansible on jenkins is close to impossible.
+
 Since we are running Jenkins on a container, we cannot put a binary in it, we cannot install pip packages. No matter how much I tried and tried to make it permanent, I realized that it did not work properly after restarting the pod.
 
 Likewise, I started looking for a plugin that works in a container, and even though I installed the ansible-plugin, I could not write ansible-playbook in the pipeline because the PATH and bin variables from the source image did not work properly and I was stuck with user privileges.  
-however, I wrote a playbook similar to the one we use in Türk Telekom to do the task.
+however, I wrote a playbook similar to the one we use in Türk Telekom to do the task.  
+ 
 
-If we were using jenkins on a virtual machine or physical server, I could simply install and run ansible like i did before, the ansible binary would run on the os jenkins is on.
+If we were using jenkins on a virtual machine or physical server, I could simply install and run ansible like i did before, the ansible binary would run on the os jenkins is on. So I used a deploy step in jenkins pipeline using **kubectl** image as in **builder.yaml.**  
+ 
 
-So I used a deploy step in jenkins pipeline using kubectl image as in builder.yaml.
+And, about 1 day later, it came to my mind, I realized why I couldn't run an ansible container agent and deploy from there while I could use **podTemplate**.
 
-And, About 1 day later, it came to my mind, I realized why I couldn't run an ansible container agent and deploy from there while I could use podTemplate.
+I wrote **deployer.yaml** and a **dockerfile** image with **ansible**, **kubernetes** pip packages in it. Then I successfully performed the deployment step with ansible-playbook by using this and mounting kubeconfig to the container as secret.
 
-I wrote deployer.yaml and a dockerfile image with ansible, kubernetes pip packages in it. Then I successfully performed the deployment step with ansible-playbook by using this and mounting kubeconfig to the container as secret.
-
-If it was possible here, I think it would be healthier to progress with gitlab. It is easier to write and run the pipeline, and it saves time thanks to the features such as the helm-chart repository and the image registry. In my humble opinion, argocd can be used in the CD step.
+If it was possible here, I think it would be healthier to progress with **GitLab**. It is easier to write and run the pipeline, and it saves time thanks to the features such as the **helm-chart** repository and the **image registry**. In my humble opinion, **ArgoCD** can be used in the CD step.
 
 ### Step 3.5 Webhook:
 
-I used python and flask, created a docker image and created files such as webhook-config, certs, deployment, service and tested both true and false condition. I wrote bash scripts with curl for this that make testing easier.
+I used python and flask, created a docker image and created files such as webhook-config, certs, deployment, service and **tested both true and false condition**. 
+
+I wrote bash scripts with curl for this that make testing easier.
 
 ### Step 4.1 PDP, Priority, Preemption
 
-The important thing here is to create the priorityclasses in both applications. We have to make our application X use the higher priorityclass. This allows application X to have a higher priority schedule than application Y at the time of load.
+The important thing here is to create the **priorityClasses** in both applications. We have to make our application X use the **higher priorityclass**. This allows application X to have a higher priority schedule than application Y at the time of load.
 
-With nodeAffinity we can identify higher capacity nodes specific to X.  
-  
-With pod distribution budget If we want other applications to use the resources on the nodes more equally, we can limit the number of replicas that the application will run on certain nodes.
+With **nodeAffinity** we can identify higher capacity nodes specific to X.
+
+With pod distribution budget If we want other applications to use the resources on the nodes more **equally**, we can limit the number of replicas that the application will run on certain nodes.
 
 ```plaintext
 #create for X
@@ -328,6 +334,8 @@ value: 1000000
 globalDefault: false
 description: "This priority class gives high priority to App X"
 
+---
+
 # create for Y
 apiVersion: scheduling.k8s.io/v1
 kind: PriorityClass
@@ -336,6 +344,8 @@ metadata:
 value: 500000
 globalDefault: false
 description: "This priority class gives low priority to App Y"
+
+---
 
 # use in pod
 apiVersion: v1
@@ -348,6 +358,8 @@ spec:
     - name: app-x
       image: app-x-image:latest
 
+---
+
 #Limiting the Number of Pods in a Specific Node      
 apiVersion: policy/v1beta1
 kind: PodDisruptionBudget
@@ -359,6 +371,8 @@ spec:
     matchLabels:
       app: my-deployment
   topologyKey: kubernetes.io/hostname
+
+---
 
 #Equal Distribution, up to 2 pods per node  
 apiVersion: policy/v1beta1
@@ -376,9 +390,13 @@ spec:
 
 ### Step 4.2 Canary, ArgoCD, Istio:
 
-If I were to implement canary deployments, I would use Istio for managing traffic splitting and routing between different versions of my application. I would define the application manifests, including the deployment, service, and Istio VirtualService resources, to specify the canary deployment strategy such as traffic splitting rules.
+If I were to implement canary deployments, I would use Istio for managing traffic splitting and routing between different versions of my application. 
 
-In my pipeline, I would integrate ArgoCD and configure it to work with Argo Rollouts. Argo Rollouts is an extension to ArgoCD that provides advanced deployment strategies, including canary deployments. By enabling Argo Rollouts integration, I would have the ability to manage canary deployments seamlessly.
+I would define the application manifests, including the deployment, service, and **Istio** **VirtualService** resources, to specify the canary deployment strategy such as traffic splitting rules.
+
+In my pipeline, I would integrate ArgoCD and configure it to work with Argo Rollouts. Argo Rollouts is an extension to ArgoCD that provides advanced deployment strategies, including canary deployments. 
+
+By enabling Argo Rollouts integration, I would have the ability to manage canary deployments seamlessly.
 
 Once the canary deployment is in place, I would monitor its performance and analyze metrics and user feedback. Based on the analysis results, I would decide whether to promote the canary deployment to a wider audience or roll back if any issues are detected.
 
@@ -387,10 +405,20 @@ By following this approach, I can ensure smooth canary deployments using Istio f
 ### Step 4.3.a HPA:
 
 To ensure that the application scales out/in appropriately before/after a certain period of time, I would use Horizontal Pod Autoscaling (HPA).   
-HPA automatically adjusts the number of replicas for a Deployment based on the observed CPU utilization or other custom metrics.   
+**HPA** automatically adjusts the number of replicas for a Deployment based on the observed CPU utilization or other custom metrics. 
+
+  
 By defining appropriate metrics and thresholds, HPA can automatically scale the application horizontally to handle increased traffic during peak times.   
 This ensures that the application can dynamically scale up or down based on demand, preventing slowness and ensuring optimal performance.  
 
 ### Step 4.3.b Karpenter AutoScaling
 
-To address the situation where there are not enough resources on the cluster during scaling at peak times, I would utilize Karpenter. Karpenter is a Kubernetes-based solution that provides automated cluster autoscaling. By defining scaling profiles and scheduling rules, Karpenter can automatically scale the cluster resources, such as nodes, based on predetermined conditions. For example, I can configure Karpenter to increase the number of nodes before certain times to ensure sufficient resources are available during peak traffic. This proactive scaling approach allows for seamless handling of increased load without slowing down the system.
+To address the situation where there are not enough resources on the cluster during scaling at peak times, 
+
+I would use Karpenter. **Karpenter** is a Kubernetes-based solution that provides automated **cluster autoscaling.** 
+
+By defining scaling profiles and scheduling rules, Karpenter can automatically scale the cluster resources, such as nodes, based on predetermined conditions. 
+
+For example, I can configure Karpenter to increase the number of nodes before certain times to ensure sufficient resources are available during peak traffic.
+
+This proactive scaling approach allows for seamless handling of increased load without slowing down the system.
