@@ -1,4 +1,4 @@
-## Dream Games Case Study
+## Example Case Study
 
 ## TABLE OF CONTENTS
 
