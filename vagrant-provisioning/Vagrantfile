@@ -3,12 +3,12 @@
 
 ENV['VAGRANT_NO_PARALLEL'] = 'yes'
 
-VAGRANT_BOX         = "generic/ubuntu2204"
-VAGRANT_BOX_VERSION = "4.2.10"
-CPUS_MASTER_NODE    = 2
-CPUS_WORKER_NODE    = 2
-MEMORY_MASTER_NODE  = 4096
-MEMORY_WORKER_NODE  = 5192
+VAGRANT_BOX         = "debian/bookworm64"
+VAGRANT_BOX_VERSION = "12.20240503.1"
+CPUS_MASTER_NODE    = 4
+CPUS_WORKER_NODE    = 8
+MEMORY_MASTER_NODE  = 6800
+MEMORY_WORKER_NODE  = 12000
 WORKER_NODES_COUNT  = 2
 
 
@@ -22,15 +22,10 @@ Vagrant.configure(2) do |config|
     node.vm.box               = VAGRANT_BOX
     node.vm.box_check_update  = false
     node.vm.box_version       = VAGRANT_BOX_VERSION
-    node.vm.hostname          = "kmaster.cnr.com"
+    node.vm.hostname          = "kmaster.caas.local"
 
-    node.vm.network "private_network", ip: "172.16.16.100"
+    node.vm.network "private_network", ip: "192.168.123.10"
   
-    node.vm.provider :virtualbox do |v|
-      v.name    = "kmaster"
-      v.memory  = MEMORY_MASTER_NODE
-      v.cpus    = CPUS_MASTER_NODE
-    end
   
     node.vm.provider :libvirt do |v|
       v.memory  = MEMORY_MASTER_NODE
@@ -51,15 +46,9 @@ Vagrant.configure(2) do |config|
       node.vm.box               = VAGRANT_BOX
       node.vm.box_check_update  = false
       node.vm.box_version       = VAGRANT_BOX_VERSION
-      node.vm.hostname          = "kworker#{i}.cnr.com"
+      node.vm.hostname          = "kworker#{i}.caas.local"
 
-      node.vm.network "private_network", ip: "172.16.16.10#{i}"
-
-      node.vm.provider :virtualbox do |v|
-        v.name    = "kworker#{i}"
-        v.memory  = MEMORY_WORKER_NODE
-        v.cpus    = CPUS_WORKER_NODE
-      end
+      node.vm.network "private_network", ip: "192.168.123.2#{i}"
 
       node.vm.provider :libvirt do |v|
         v.memory  = MEMORY_WORKER_NODE

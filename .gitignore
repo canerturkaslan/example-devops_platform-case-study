@@ -4,7 +4,7 @@ vagrant-provisioning/.vagrant
 __pycache__/
 *.py[cod]
 *$py.class
-
+.vagrant/
 # C extensions
 *.so
 
